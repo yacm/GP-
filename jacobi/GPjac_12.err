@@ -1,0 +1,5 @@
+/sciclone/pscr/yacahuanamedra/GP.py:530: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.shift=tr.tensor(shift).to(device)
+/sciclone/pscr/yacahuanamedra/GP.py:531: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.scale=tr.tensor(scale).to(device)
+slurmstepd: error: *** JOB 7550 ON bo46 CANCELLED AT 2024-10-31T10:17:22 ***
