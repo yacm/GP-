@@ -61,6 +61,7 @@ class GaussianProcess():
     def Uncertaintyanalysis(self,trace):
         qofx=tr.zeros_like(self.x_grid)
         Z=tr.tensor([0.0])
+        Pms=[]
         for i in range(trace.shape[0]):
             pd_args = tuple(trace[i,:self.Npd_args])
             k_args = tuple(trace[i,self.Npd_args:])
@@ -83,6 +84,7 @@ class GaussianProcess():
             VK = self.V@K
             #CpMat = K - VK.T@iChat@VK
             Pm = Pd +VK.T@iChat@(self.Y-self.V@Pd)
+            Pms.append(Pm)
             qofx+=tr.exp(-E)*Pm
             Z+=tr.exp(-E)
         
@@ -118,7 +120,7 @@ class GaussianProcess():
             cov+=tr.exp(-E)*(0.5*CpMat+(qx)*(qxx))
             Z+=tr.exp(-E)
 
-        return qs,cov/Z
+        return qs,cov/Z,Pms
     
     def nucovariance(self):
         #define nu grid for the covariance matrix
