@@ -61,9 +61,19 @@ class GaussianProcess():
     def Uncertaintyanalysis(self,trace):
         qofx=tr.zeros_like(self.x_grid)
         Z=tr.tensor([0.0])
+        nn = np.linspace(0,20,128)
+        iB = np.zeros((nn.shape[0],self.x_grid.shape[0]))
+        fe=FE2_Integrator(self.x_grid)
+        for k in range(nn.shape[0]):
+            iB[k,:] = fe.set_up_integration(Kernel= lambda x : np.cos(nn[k]*x))
+        nn=tr.tensor(nn,dtype=tr.float32).to(self.device)
+        Qofnu=tr.zeros_like(nn)
+        iB=tr.tensor(iB,dtype=tr.float32).to(self.device)
         Pms=[]
+        Qnu=[]
+        #<q> and <Q> calculation
         for i in range(trace.shape[0]):
-            pd_args = tuple(trace[i,:self.Npd_args])
+            pd_args = tuple(trace[i,0:self.Npd_args])
             k_args = tuple(trace[i,self.Npd_args:])
             E=self.nlpEvidence(pd_args,k_args)
             if self.flag=="noisy":
@@ -84,13 +94,18 @@ class GaussianProcess():
             VK = self.V@K
             #CpMat = K - VK.T@iChat@VK
             Pm = Pd +VK.T@iChat@(self.Y-self.V@Pd)
+            Qofnu+= tr.exp(-E)*Pm@iB.T 
+            Qnu.append(Pm@iB.T)
             Pms.append(Pm)
             qofx+=tr.exp(-E)*Pm
             Z+=tr.exp(-E)
-        
+
+        Qs=Qofnu/Z
         qs=qofx/Z
+
         #Calculate the covariance matrix
         cov = tr.zeros((self.x_grid.shape[0],self.x_grid.shape[0]))
+        covnu=tr.zeros((nn.shape[0],nn.shape[0]))
         Z=tr.tensor([0.0])
         for i in range(trace.shape[0]):
             pd_args = tuple(trace[i,:self.Npd_args])
@@ -114,44 +129,28 @@ class GaussianProcess():
             VK = self.V@K
             CpMat = K - VK.T@iChat@VK
             Pm = Pd +VK.T@iChat@(self.Y-self.V@Pd)
+            
+            CnuMat= iB@CpMat@iB.T
+            Qm = Pm@iB.T
+            meannu=Qm-Qs
             mean=Pm-qs
+            
             qx=mean.view(1,mean.shape[0])
-            qxx=qx.view(mean.shape[0],1)
-            cov+=tr.exp(-E)*(0.5*CpMat+(qx)*(qxx))
+            #qxx=qx.view(mean.shape[0],1)
+            qxx=mean.view(mean.shape[0],1)
+            Qv=meannu.view(1,meannu.shape[0])
+            Qvv=meannu.view(meannu.shape[0],1)
+            cov+=tr.exp(-E)*(CpMat+(qx)*(qxx))
+            covnu+=tr.exp(-E)*(CnuMat+(Qv)*(Qvv))
             Z+=tr.exp(-E)
 
-        return qs,cov/Z,Pms
-    
-    def nucovariance(self):
-        #define nu grid for the covariance matrix
-        nu=tr.linspace(0,100,10000)
-        #compute the covariance matrix in x
-        K = self.Ker(self.x_grid,*self.ker_args)
-        return K
-        
-    #define the pdf as a function of kernel and parameters
-    def posteriorpdf(self,p_x,k_x):
-        # p = [a,b,sig,w]
-        pd_args = tuple(p_x)
-        k_args = tuple(k_x)
-        K = self.Ker(self.x_grid,k_args)
-        Pd = self.Pd(self.x_grid,pd_args)
-        Chat = self.Gamma + self.V@K@self.V.T
-        iChat = tr.linalg.inv(Chat)
-        VK = self.V@K
-        #Posterior covariance
-        Cov = K - VK.T@iChat@VK
-        Cov = (Cov + Cov.T)/2+1e-6*tr.eye(Cov.shape[0])
-        Mean = Pd +VK.T@iChat@(self.Y-self.V@Pd)
-        return tr.distributions.multivariate_normal.MultivariateNormal(Mean,Cov)
+        return qs,cov/Z,Pms,Qs,covnu/Z,Qnu
 
     #This also defines the likelihood in the second level of inference
     def nlpEvidence(self,p_x,k_x):
         # p = [a,b,sig,w]
         pd_args = tuple(p_x)
         k_args = tuple(k_x)
-        """if k_x[4]<0:
-            return tr.tensor([0.0],requires_grad=True)"""
         if self.flag=="noisy":
             sig = k_args[-1]
             #sig=10**sig
@@ -176,7 +175,7 @@ class GaussianProcess():
         D = self.Y - self.V@Pd
         # no need for D.T@iChat@D D.@iChat@D does the job...
         sign,logdet = tr.linalg.slogdet(Chat)
-        nlp = 0.5*(D@iChat@D + sign*logdet)
+        nlp = 0.5*(D@iChat@D + sign*logdet) + 0.5*self.Gamma.shape[0]*np.log(2.0*np.pi)
         return nlp
     
     def train(self,Nsteps=100,lr=0.4,mode="kernel",function="evidence"):
@@ -537,6 +536,153 @@ def jacobi(x,s,t,a,b):
    y=x.view(1,x.shape[0])
    return (s**2)*(x*y)**a*((1-x)*(1-y))**b*(R(2*x-1,t)*R(2*y-1,t)*((1-t+R(2*x-1,t))*(1-t+R(2*y-1,t)))**a*((1+t+R(2*x-1,t))*(1+t+R(2*y-1,t)))**b)**(-1)
 
+
+class FE_Integrator:
+    def __init__(self,x):
+        self.N = x.shape[0]
+        xx = np.append(x,2.0*x[self.N-1] - x[self.N-2])
+        self.x = np.append(0,xx)
+        self.eI = 0
+
+        self.Norm = np.empty(self.N)
+        for i in range(self.N):
+            self.Norm[i] = self.ComputeI(i, lambda x : 1)
+            
+    def pulse(self,x,x1,x2):
+        return np.heaviside(x-x1,0.5)* np.heaviside(x2-x,0.5)
+    
+    def f(self,x,i):
+ ##       if(i==0):
+ ##           R=(x- self.x[2])/(self.x[1] -self.x[2])*np.heaviside(x-self.x[0],1.0)* np.heaviside(self.x[2]-x,0.5)
+
+            #R= self.pulse(x,self.x[0],self.x[1])
+            #R= (x- self.x[0])/(self.x[1] -self.x[0])*self.pulse(x,self.x[0],self.x[1])
+            #R+=(x- self.x[2])/(self.x[1] -self.x[2])*self.pulse(x,self.x[1],self.x[2])
+            #R+=(x- self.x[1])/(self.x[0] -self.x[1])*self.pulse(x,self.x[0],self.x[1]) 
+##            return R
+        ii=i+1
+        R = (x- self.x[ii-1])/(self.x[ii] -self.x[ii-1])*self.pulse(x,self.x[ii-1],self.x[ii  ])
+        R+= (x- self.x[ii+1])/(self.x[ii] -self.x[ii+1])*self.pulse(x,self.x[ii  ],self.x[ii+1])
+
+       # if(i==0):
+       #     R *=2
+        return R
+    
+    def set_up_integration(self,Kernel = lambda x: 1):
+        res = np.empty(self.N)
+        for i in range(self.N):
+            res[i] = self.ComputeI(i,Kernel)
+        return res
+   
+    # assume symmetrix function F(x,y) = F(y,x)
+    # for efficiency
+    def set_up_dbl_integration(self,Kernel = lambda x,y: 1):
+        res = np.empty([self.N,self.N])
+        for i in range(self.N):
+            for j in range(i,self.N):
+                res[i,j] = self.ComputeIJ(i,j,Kernel)
+                res[j,i]  = res[i,j]
+        #res[0,:] *=2
+        #res[:,0] *=2
+        return res
+        
+    def ComputeI(self,i,Kernel):
+        I,eI = integrate.quad(lambda x: Kernel(x)*self.f(x,i), self.x[i], self.x[i+2])
+        self.eI += eI
+        return I
+    
+    def ComputeIJ(self,i,j,Kernel):
+        I,eI = integrate.dblquad(lambda x,y: self.f(x,i)*Kernel(x,y)*self.f(y,j), self.x[j], self.x[j+2],self.x[i], self.x[i+2])
+        self.eI += eI
+        return I
+    
+    
+# quadratic finite elements are more complicated...
+# ... but now it works!
+# also I should try the qubic ones too
+class FE2_Integrator:
+    def __init__(self,x):
+        self.N = x.shape[0]
+        xx = np.append(x,[2.0*x[self.N-1] - x[self.N-2], 3.0*x[self.N-1]-2*x[self.N-2],0] )
+        #self.x = np.append([-x[0],0],xx)
+        self.x = np.append(0,xx)
+        self.eI = 0
+
+        self.Norm = np.empty(self.N)
+        for i in range(self.N):
+            self.Norm[i] = self.ComputeI(i, lambda x : 1)
+            
+    def pulse(self,x,x1,x2):
+        return np.heaviside(x-x1,0.5)* np.heaviside(x2-x,0.5)
+    
+    def f(self,x,i):
+        R=0.0
+        if(i==0):
+            #R=self.pulse(x,self.x[0],self.x[1])
+            #R=self.pulse(x,self.x[1],self.x[2])
+        #    R+=(x- self.x[2])/(self.x[1] -self.x[2])*self.pulse(x,self.x[1],self.x[2])
+
+            R+=(x- self.x[2])*(x- self.x[3])/((self.x[1] -self.x[3])*(self.x[1] -self.x[2]))**np.heaviside(x-self.x[0],1.0)* np.heaviside(self.x[3]-x,0.5)
+            #self.pulse(x,self.x[0],self.x[3])
+            return R
+        ii =i+1
+        if(ii%2==0):
+            R  += (x- self.x[ii-1])*(x- self.x[ii+1])/((self.x[ii] -self.x[ii+1])*(self.x[ii] -self.x[ii-1]))*self.pulse(x,self.x[ii-1],self.x[ii+1])
+            return R
+        else:
+            R += (x- self.x[ii-2])*(x- self.x[ii-1])/((self.x[ii] -self.x[ii-2])*(self.x[ii] -self.x[ii-1]))*self.pulse(x,self.x[ii-2],self.x[ii  ])
+            R += (x- self.x[ii+1])*(x- self.x[ii+2])/((self.x[ii] -self.x[ii+2])*(self.x[ii] -self.x[ii+1]))*self.pulse(x,self.x[ii  ],self.x[ii+2])
+            return R
+    
+        return R
+    
+    def set_up_integration(self,Kernel = lambda x: 1):
+        res = np.empty(self.N)
+        for i in range(self.N):
+            res[i] = self.ComputeI(i,Kernel)
+        return res
+        
+    # assume symmetrix function F(x,y) = F(y,x)
+    # for efficiency 
+    def set_up_dbl_integration(self,Kernel = lambda x,y: 1):
+        res = np.empty([self.N,self.N])
+        for i in range(self.N):
+            for j in range(i,self.N):
+                res[i,j] = self.ComputeIJ(i,j,Kernel)
+                res[j,i]  = res[i,j]
+        return res
+    
+    def ComputeI(self,i,Kernel):
+        #if(i==0):
+        #    I,eI = integrate.quad(lambda x: Kernel(x)*self.f(x,0), self.x[0], self.x[3])
+        #    self.eI += eI
+        #    return I
+        ii=i+1
+        if(ii%2==0):
+            I,eI = integrate.quad(lambda x: Kernel(x)*self.f(x,i), self.x[ii-1], self.x[ii+1])
+            self.eI += eI
+        else:
+            I,eI = integrate.quad(lambda x: Kernel(x)*self.f(x,i), self.x[ii-2], self.x[ii+2])
+            self.eI += eI
+        return I
+    
+    def ComputeIJ(self,i,j,Kernel):
+        # I need to fix the i=0 case
+        ii=i+1
+        jj=j+1
+        if(ii%2==0):
+            xx = (self.x[ii-1], self.x[ii+1])
+        else:
+            xx = (self.x[ii-2], self.x[ii+2])
+        if(jj%2==0):
+            yy = (self.x[jj-1], self.x[jj+1])
+        else:
+            yy = (self.x[jj-2], self.x[jj+2])
+        
+        I,eI = integrate.dblquad(lambda x,y: self.f(x,i)*Kernel(x,y)*self.f(y,j), yy[0], yy[1],xx[0], xx[1])
+        self.eI += eI
+
+        return I
 
 
 #### Probablity Distributions ####
