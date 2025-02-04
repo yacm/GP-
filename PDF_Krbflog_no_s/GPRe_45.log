@@ -1,0 +1,114 @@
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torch/functional.py:513: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /opt/conda/conda-bld/pytorch_1724789563135/work/aten/src/ATen/native/TensorShape.cpp:3609.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torchquad/integration/utils.py:248: UserWarning: DEPRECATION WARNING: In future versions of torchquad, an array-like object will be returned.
+  warnings.warn(
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torch/functional.py:513: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /opt/conda/conda-bld/pytorch_1724789563135/work/aten/src/ATen/native/TensorShape.cpp:3609.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torchquad/integration/utils.py:248: UserWarning: DEPRECATION WARNING: In future versions of torchquad, an array-like object will be returned.
+  warnings.warn(
+Namespace(i=0, Nsamples=7000, burn=0, L=100, eps=0.001, ITD='Re', mean='PDF', ker='Krbflog_no_s', mode='all', IDslurm='45')
+Current date and time : 2025-01-27 08:14:01
+GP specifications 
+ Sampling or training: all
+ model: PDF
+ kernel: Krbflog_no_s nugget: no
+ Ioffe time Distribution: Re(M) 
+ mean = tensor([-1.0000,  0.0000,  0.1000,  0.0000]) 
+ sigma = tensor([ 2., 15., 15., 10.]) 
+ prior dist = tensor([2, 2, 2, 2]) 
+ model init = (-0.1, 2.0, 3.0) 
+ kernel init = (1.1,) 
+ momentum init = tensor([1., 1., 1., 1.]) 
+ device = cpu 
+ mode = all 
+ SLURM_ID = 45
+#################Define the model###########################
+0=gaussian, 1=lognormal, 2=expbeta
+z=1a done
+z=2a done
+z=3a done
+z=4a done
+z=5a done
+z=6a done
+z=7a done
+z=8a done
+z=9a done
+z=10a done
+z=11a done
+z=12a done
+z=NNPDF(4) done
+z=NNPDF(10) done
+z=NNPDF(25) done
+Training everything z=1a
+tensor([-0.0189,  3.3688,  4.1141,  8.0120,  1.0000])
+(tensor(8.0120),)
+z=1a sampler done
+z=2a sampler done
+z=3a sampler done
+z=4a sampler done
+z=5a sampler done
+z=6a sampler done
+z=7a sampler done
+z=8a sampler done
+z=9a sampler done
+z=10a sampler done
+z=11a sampler done
+z=12a sampler done
+z=NNPDF(4) sampler done
+z=NNPDF(10) sampler done
+z=NNPDF(25) sampler done
+  0%|          | 0/6999 [00:00<?, ?it/s]Namespace(i=0, Nsamples=7000, burn=0, L=100, eps=0.001, ITD='Re', mean='PDF', ker='Krbflog_no_s', mode='all', IDslurm='45')
+Current date and time : 2025-01-27 08:14:01
+GP specifications 
+ Sampling or training: all
+ model: PDF
+ kernel: Krbflog_no_s nugget: no
+ Ioffe time Distribution: Re(M) 
+ mean = tensor([-1.0000,  0.0000,  0.1000,  0.0000]) 
+ sigma = tensor([ 2., 15., 15., 10.]) 
+ prior dist = tensor([2, 2, 2, 2]) 
+ model init = (-0.1, 2.0, 3.0) 
+ kernel init = (1.1,) 
+ momentum init = tensor([1., 1., 1., 1.]) 
+ device = cpu 
+ mode = all 
+ SLURM_ID = 45
+#################Define the model###########################
+0=gaussian, 1=lognormal, 2=expbeta
+z=1a done
+z=2a done
+z=3a done
+z=4a done
+z=5a done
+z=6a done
+z=7a done
+z=8a done
+z=9a done
+z=10a done
+z=11a done
+z=12a done
+z=NNPDF(4) done
+z=NNPDF(10) done
+z=NNPDF(25) done
+Training everything z=1a
+tensor([-0.0189,  3.3688,  4.1141,  8.0120,  1.0000])
+(tensor(8.0120),)
+z=1a sampler done
+z=2a sampler done
+z=3a sampler done
+z=4a sampler done
+z=5a sampler done
+z=6a sampler done
+z=7a sampler done
+z=8a sampler done
+z=9a sampler done
+z=10a sampler done
+z=11a sampler done
+z=12a sampler done
+z=NNPDF(4) sampler done
+z=NNPDF(10) sampler done
+z=NNPDF(25) sampler done
+  0%|          | 0/6999 [00:00<?, ?it/s]  1%|          | 70/6999 [00:52<1:26:03,  1.34it/s]  1%|          | 70/6999 [01:09<1:55:11,  1.00it/s]  2%|▏         | 140/6999 [01:44<1:25:06,  1.34it/s]  2%|▏         | 140/6999 [02:19<1:53:45,  1.00it/s]  3%|▎         | 210/6999 [02:36<1:23:59,  1.35it/s]  4%|▍         | 280/6999 [03:28<1:23:09,  1.35it/s]  3%|▎         | 210/6999 [03:29<1:53:04,  1.00it/s]  5%|▌         | 350/6999 [04:20<1:22:31,  1.34it/s]  4%|▍         | 280/6999 [04:40<1:52:15,  1.00s/it]  6%|▌         | 420/6999 [05:12<1:21:41,  1.34it/s]  5%|▌         | 350/6999 [05:50<1:51:05,  1.00s/it]  7%|▋         | 490/6999 [06:04<1:20:52,  1.34it/s]  8%|▊         | 560/6999 [06:57<1:20:17,  1.34it/s]  6%|▌         | 420/6999 [07:00<1:49:48,  1.00s/it]  9%|▉         | 630/6999 [07:49<1:19:24,  1.34it/s]  7%|▋         | 490/6999 [08:10<1:48:36,  1.00s/it] 10%|█         | 700/6999 [08:42<1:18:22,  1.34it/s]  8%|▊         | 560/6999 [09:20<1:47:23,  1.00s/it] 11%|█         | 770/6999 [09:34<1:17:25,  1.34it/s] 12%|█▏        | 840/6999 [10:26<1:16:36,  1.34it/s]  9%|▉         | 630/6999 [10:30<1:46:15,  1.00s/it] 13%|█▎        | 910/6999 [11:18<1:15:41,  1.34it/s] 10%|█         | 700/6999 [11:40<1:44:53,  1.00it/s] 14%|█▍        | 980/6999 [12:10<1:14:45,  1.34it/s] 11%|█         | 770/6999 [12:49<1:43:30,  1.00it/s] 15%|█▌        | 1050/6999 [13:02<1:13:49,  1.34it/s]slurmstepd: error: *** JOB 1147079 ON fm22 CANCELLED AT 2025-01-27T08:27:40 ***
+ 12%|█▏        | 840/6999 [13:59<1:42:22,  1.00it/s] 13%|█▎        | 910/6999 [15:09<1:41:29,  1.00s/it] 14%|█▍        | 980/6999 [16:20<1:40:35,  1.00s/it] 15%|█▌        | 1050/6999 [17:30<1:39:26,  1.00s/it] 16%|█▌        | 1120/6999 [18:41<1:38:19,  1.00s/it] 17%|█▋        | 1190/6999 [19:50<1:36:58,  1.00s/it] 18%|█▊        | 1260/6999 [21:01<1:35:54,  1.00s/it] 19%|█▉        | 1330/6999 [22:11<1:34:47,  1.00s/it] 20%|██        | 1400/6999 [23:21<1:33:34,  1.00s/it] 21%|██        | 1470/6999 [24:31<1:32:11,  1.00s/it] 22%|██▏       | 1540/6999 [25:40<1:30:48,  1.00it/s] 23%|██▎       | 1610/6999 [26:48<1:29:00,  1.01it/s] 24%|██▍       | 1680/6999 [27:55<1:26:54,  1.02it/s] 25%|██▌       | 1750/6999 [29:03<1:25:21,  1.02it/s] 26%|██▌       | 1820/6999 [30:11<1:24:08,  1.03it/s] 27%|██▋       | 1890/6999 [31:19<1:23:00,  1.03it/s] 28%|██▊       | 1960/6999 [32:28<1:21:58,  1.02it/s] 29%|██▉       | 2030/6999 [33:36<1:20:46,  1.03it/s] 30%|███       | 2100/6999 [34:44<1:19:43,  1.02it/s] 31%|███       | 2170/6999 [35:53<1:18:43,  1.02it/s] 32%|███▏      | 2240/6999 [37:01<1:17:27,  1.02it/s] 33%|███▎      | 2310/6999 [38:10<1:16:17,  1.02it/s] 34%|███▍      | 2380/6999 [39:18<1:15:05,  1.03it/s] 35%|███▌      | 2450/6999 [40:26<1:13:52,  1.03it/s] 36%|███▌      | 2520/6999 [41:33<1:12:30,  1.03it/s] 37%|███▋      | 2590/6999 [42:41<1:11:20,  1.03it/s] 38%|███▊      | 2660/6999 [43:49<1:10:09,  1.03it/s] 39%|███▉      | 2730/6999 [44:58<1:09:15,  1.03it/s] 40%|████      | 2800/6999 [46:06<1:08:15,  1.03it/s] 41%|████      | 2870/6999 [47:15<1:07:07,  1.03it/s] 42%|████▏     | 2940/6999 [48:22<1:05:51,  1.03it/s] 43%|████▎     | 3010/6999 [49:31<1:04:43,  1.03it/s] 44%|████▍     | 3080/6999 [50:39<1:03:40,  1.03it/s] 45%|████▌     | 3150/6999 [51:48<1:02:37,  1.02it/s] 46%|████▌     | 3220/6999 [52:56<1:01:30,  1.02it/s] 47%|████▋     | 3290/6999 [54:04<1:00:20,  1.02it/s] 48%|████▊     | 3360/6999 [55:12<59:08,  1.03it/s]   49%|████▉     | 3430/6999 [56:21<58:04,  1.02it/s] 50%|█████     | 3500/6999 [57:29<56:59,  1.02it/s] 51%|█████     | 3570/6999 [58:38<55:52,  1.02it/s] 52%|█████▏    | 3640/6999 [59:46<54:44,  1.02it/s] 53%|█████▎    | 3710/6999 [1:00:55<53:38,  1.02it/s] 54%|█████▍    | 3780/6999 [1:02:03<52:24,  1.02it/s] 55%|█████▌    | 3850/6999 [1:03:12<51:17,  1.02it/s] 56%|█████▌    | 3920/6999 [1:04:20<50:10,  1.02it/s] 57%|█████▋    | 3990/6999 [1:05:29<49:02,  1.02it/s] 58%|█████▊    | 4060/6999 [1:06:37<47:52,  1.02it/s] 59%|█████▉    | 4130/6999 [1:07:45<46:45,  1.02it/s] 60%|██████    | 4200/6999 [1:08:54<45:33,  1.02it/s] 61%|██████    | 4270/6999 [1:10:01<44:19,  1.03it/s] 62%|██████▏   | 4340/6999 [1:11:10<43:18,  1.02it/s] 63%|██████▎   | 4410/6999 [1:12:19<42:13,  1.02it/s] 64%|██████▍   | 4480/6999 [1:13:28<41:05,  1.02it/s] 65%|██████▌   | 4550/6999 [1:14:36<39:55,  1.02it/s] 66%|██████▌   | 4620/6999 [1:15:44<38:44,  1.02it/s] 67%|██████▋   | 4690/6999 [1:16:52<37:31,  1.03it/s] 68%|██████▊   | 4760/6999 [1:18:01<36:25,  1.02it/s] 69%|██████▉   | 4830/6999 [1:19:09<35:21,  1.02it/s] 70%|███████   | 4900/6999 [1:20:18<34:17,  1.02it/s] 71%|███████   | 4970/6999 [1:21:27<33:11,  1.02it/s] 72%|███████▏  | 5040/6999 [1:22:36<32:02,  1.02it/s] 73%|███████▎  | 5110/6999 [1:23:45<30:53,  1.02it/s] 74%|███████▍  | 5180/6999 [1:24:53<29:44,  1.02it/s] 75%|███████▌  | 5250/6999 [1:26:01<28:29,  1.02it/s] 76%|███████▌  | 5320/6999 [1:27:08<27:10,  1.03it/s] 77%|███████▋  | 5390/6999 [1:28:12<25:37,  1.05it/s] 78%|███████▊  | 5460/6999 [1:29:13<23:47,  1.08it/s] 79%|███████▉  | 5530/6999 [1:30:12<22:06,  1.11it/s] 80%|████████  | 5600/6999 [1:31:10<20:33,  1.13it/s] 81%|████████  | 5670/6999 [1:32:08<19:12,  1.15it/s] 82%|████████▏ | 5740/6999 [1:33:07<18:00,  1.17it/s] 83%|████████▎ | 5810/6999 [1:34:15<17:41,  1.12it/s] 84%|████████▍ | 5880/6999 [1:35:14<16:19,  1.14it/s] 85%|████████▌ | 5950/6999 [1:36:12<15:06,  1.16it/s] 86%|████████▌ | 6020/6999 [1:37:11<13:57,  1.17it/s] 87%|████████▋ | 6090/6999 [1:38:09<12:52,  1.18it/s] 88%|████████▊ | 6160/6999 [1:39:08<11:49,  1.18it/s] 89%|████████▉ | 6230/6999 [1:40:06<10:48,  1.19it/s] 90%|█████████ | 6300/6999 [1:41:05<09:47,  1.19it/s] 91%|█████████ | 6370/6999 [1:42:03<08:47,  1.19it/s] 92%|█████████▏| 6440/6999 [1:43:02<07:48,  1.19it/s] 93%|█████████▎| 6510/6999 [1:44:00<06:49,  1.19it/s] 94%|█████████▍| 6580/6999 [1:44:59<05:50,  1.20it/s] 95%|█████████▌| 6650/6999 [1:45:57<04:51,  1.20it/s] 96%|█████████▌| 6720/6999 [1:46:55<03:52,  1.20it/s] 97%|█████████▋| 6790/6999 [1:47:52<02:53,  1.21it/s] 98%|█████████▊| 6860/6999 [1:48:50<01:55,  1.21it/s] 99%|█████████▉| 6930/6999 [1:49:48<00:57,  1.21it/s]100%|██████████| 6999/6999 [1:50:45<00:00,  1.05it/s]
+#################Sampling done###########################
+Current date and time : 2025-01-27 10:05:19

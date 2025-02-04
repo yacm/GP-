@@ -1,0 +1,57 @@
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torch/functional.py:513: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /opt/conda/conda-bld/pytorch_1724789563135/work/aten/src/ATen/native/TensorShape.cpp:3609.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torchquad/integration/utils.py:248: UserWarning: DEPRECATION WARNING: In future versions of torchquad, an array-like object will be returned.
+  warnings.warn(
+Namespace(i=9, Nsamples=25000, burn=0, L=100, eps=0.001, ITD='Im', mean='ModelC', ker='Krbflog', mode='all', IDslurm='9')
+Current date and time : 2025-01-25 22:17:13
+GP specifications 
+ Sampling or training: all
+ model: ModelC
+ kernel: Krbflog nugget: no
+ Ioffe time Distribution: Im(M) 
+ mean = tensor([0.1000, 0.0000, 0.0000]) 
+ sigma = tensor([20., 10., 10.]) 
+ prior dist = tensor([2, 2, 2]) 
+ model init = (1.0,) 
+ kernel init = (4.0, 1.0) 
+ momentum init = tensor([1., 1., 1.]) 
+ device = cpu 
+ mode = all 
+ SLURM_ID = 9
+#################Define the model###########################
+0=gaussian, 1=lognormal, 2=expbeta
+z=1a done
+z=2a done
+z=3a done
+z=4a done
+z=5a done
+z=6a done
+z=7a done
+z=8a done
+z=9a done
+z=10a done
+z=11a done
+z=12a done
+z=NNPDF(4) done
+z=NNPDF(10) done
+z=NNPDF(25) done
+Training everything z=10a
+tensor([1.5870, 1.1648, 1.0005, 1.0000])
+(tensor(1.1648), tensor(1.0005))
+z=1a sampler done
+z=2a sampler done
+z=3a sampler done
+z=4a sampler done
+z=5a sampler done
+z=6a sampler done
+z=7a sampler done
+z=8a sampler done
+z=9a sampler done
+z=10a sampler done
+z=11a sampler done
+z=12a sampler done
+z=NNPDF(4) sampler done
+z=NNPDF(10) sampler done
+z=NNPDF(25) sampler done
+  0%|          | 0/24999 [00:00<?, ?it/s]  1%|          | 250/24999 [03:01<4:59:33,  1.38it/s]  2%|▏         | 500/24999 [06:02<4:55:50,  1.38it/s]  3%|▎         | 750/24999 [09:06<4:54:52,  1.37it/s]  4%|▍         | 1000/24999 [12:06<4:50:08,  1.38it/s]  5%|▌         | 1250/24999 [15:09<4:48:35,  1.37it/s]  6%|▌         | 1500/24999 [18:14<4:46:33,  1.37it/s]  7%|▋         | 1750/24999 [21:16<4:43:02,  1.37it/s]  8%|▊         | 2000/24999 [24:18<4:39:59,  1.37it/s]  9%|▉         | 2250/24999 [27:21<4:36:56,  1.37it/s] 10%|█         | 2500/24999 [30:24<4:34:04,  1.37it/s] 11%|█         | 2750/24999 [33:27<4:31:14,  1.37it/s] 12%|█▏        | 3000/24999 [36:31<4:28:33,  1.37it/s] 13%|█▎        | 3250/24999 [39:35<4:26:12,  1.36it/s] 14%|█▍        | 3500/24999 [42:44<4:25:11,  1.35it/s] 15%|█▌        | 3750/24999 [45:49<4:22:17,  1.35it/s] 16%|█▌        | 4000/24999 [48:53<4:18:41,  1.35it/s] 17%|█▋        | 4250/24999 [52:03<4:17:41,  1.34it/s] 18%|█▊        | 4500/24999 [55:17<4:17:50,  1.33it/s] 19%|█▉        | 4750/24999 [58:21<4:12:36,  1.34it/s] 20%|██        | 5000/24999 [1:01:23<4:07:44,  1.35it/s] 21%|██        | 5250/24999 [1:04:26<4:03:22,  1.35it/s] 22%|██▏       | 5500/24999 [1:07:30<3:59:52,  1.35it/s] 23%|██▎       | 5750/24999 [1:10:32<3:55:56,  1.36it/s] 24%|██▍       | 6000/24999 [1:13:35<3:52:22,  1.36it/s] 25%|██▌       | 6250/24999 [1:16:38<3:49:07,  1.36it/s] 26%|██▌       | 6500/24999 [1:19:41<3:46:11,  1.36it/s] 27%|██▋       | 6750/24999 [1:22:44<3:42:49,  1.36it/s] 28%|██▊       | 7000/24999 [1:25:49<3:40:21,  1.36it/s] 29%|██▉       | 7250/24999 [1:28:51<3:36:52,  1.36it/s] 30%|███       | 7500/24999 [1:31:53<3:33:23,  1.37it/s] 31%|███       | 7750/24999 [1:34:56<3:30:29,  1.37it/s] 32%|███▏      | 8000/24999 [1:38:00<3:27:35,  1.36it/s] 33%|███▎      | 8250/24999 [1:41:08<3:26:01,  1.35it/s] 34%|███▍      | 8500/24999 [1:44:11<3:22:45,  1.36it/s] 35%|███▌      | 8750/24999 [1:47:14<3:19:03,  1.36it/s] 36%|███▌      | 9000/24999 [1:50:16<3:15:32,  1.36it/s] 37%|███▋      | 9250/24999 [1:53:18<3:12:08,  1.37it/s]Killed
+slurmstepd: error: Detected 1 oom_kill event in StepId=1143736.batch. Some of the step tasks have been OOM Killed.

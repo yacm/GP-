@@ -1,0 +1,57 @@
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torch/functional.py:513: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /opt/conda/conda-bld/pytorch_1724789563135/work/aten/src/ATen/native/TensorShape.cpp:3609.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torchquad/integration/utils.py:248: UserWarning: DEPRECATION WARNING: In future versions of torchquad, an array-like object will be returned.
+  warnings.warn(
+Namespace(i=10, Nsamples=25000, burn=0, L=100, eps=0.001, ITD='Re', mean='ModelC', ker='rbf_deb', mode='all', IDslurm='25')
+Current date and time : 2025-01-25 23:32:28
+GP specifications 
+ Sampling or training: all
+ model: ModelC
+ kernel: rbf_deb nugget: no
+ Ioffe time Distribution: Re(M) 
+ mean = tensor([0.1000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000]) 
+ sigma = tensor([20., 11.,  6., 11., 11.,  2.]) 
+ prior dist = tensor([2, 2, 2, 2, 2, 2, 2]) 
+ model init = (1.0,) 
+ kernel init = (4.0, 5.0, 4.0, 2.0, 0.1) 
+ momentum init = tensor([1., 1., 1., 1., 1., 1.]) 
+ device = cpu 
+ mode = all 
+ SLURM_ID = 25
+#################Define the model###########################
+0=gaussian, 1=lognormal, 2=expbeta
+z=1a done
+z=2a done
+z=3a done
+z=4a done
+z=5a done
+z=6a done
+z=7a done
+z=8a done
+z=9a done
+z=10a done
+z=11a done
+z=12a done
+z=NNPDF(4) done
+z=NNPDF(10) done
+z=NNPDF(25) done
+Training everything z=11a
+tensor([1.3221, 0.9595, 3.1295, 2.3993, 3.3873, 0.6951, 1.0000])
+(tensor(0.9595), tensor(3.1295), tensor(2.3993), tensor(3.3873), tensor(0.6951))
+z=1a sampler done
+z=2a sampler done
+z=3a sampler done
+z=4a sampler done
+z=5a sampler done
+z=6a sampler done
+z=7a sampler done
+z=8a sampler done
+z=9a sampler done
+z=10a sampler done
+z=11a sampler done
+z=12a sampler done
+z=NNPDF(4) sampler done
+z=NNPDF(10) sampler done
+z=NNPDF(25) sampler done
+  0%|          | 0/24999 [00:00<?, ?it/s]  1%|          | 250/24999 [09:46<16:06:52,  2.34s/it]  2%|▏         | 500/24999 [19:26<15:51:40,  2.33s/it]  3%|▎         | 750/24999 [28:22<15:07:42,  2.25s/it]  4%|▍         | 1000/24999 [37:21<14:43:59,  2.21s/it]  5%|▌         | 1250/24999 [46:23<14:28:43,  2.19s/it]  6%|▌         | 1500/24999 [55:23<14:15:03,  2.18s/it]  7%|▋         | 1750/24999 [1:04:23<14:02:52,  2.18s/it]  8%|▊         | 2000/24999 [1:13:22<13:51:41,  2.17s/it]  9%|▉         | 2250/24999 [1:22:23<13:41:44,  2.17s/it] 10%|█         | 2500/24999 [1:31:24<13:32:26,  2.17s/it] 11%|█         | 2750/24999 [1:40:25<13:23:09,  2.17s/it] 12%|█▏        | 3000/24999 [1:49:26<13:13:55,  2.17s/it] 13%|█▎        | 3250/24999 [1:58:28<13:05:07,  2.17s/it] 14%|█▍        | 3500/24999 [2:07:30<12:56:18,  2.17s/it] 15%|█▌        | 3750/24999 [2:16:33<12:47:48,  2.17s/it] 16%|█▌        | 4000/24999 [2:25:36<12:39:27,  2.17s/it] 17%|█▋        | 4250/24999 [2:34:40<12:30:49,  2.17s/it] 18%|█▊        | 4500/24999 [2:43:43<12:22:02,  2.17s/it] 19%|█▉        | 4750/24999 [2:52:49<12:13:54,  2.17s/it] 20%|██        | 5000/24999 [3:01:54<12:05:25,  2.18s/it] 21%|██        | 5250/24999 [3:10:59<11:57:00,  2.18s/it] 22%|██▏       | 5500/24999 [3:20:06<11:48:48,  2.18s/it] 23%|██▎       | 5750/24999 [3:29:16<11:41:27,  2.19s/it] 24%|██▍       | 6000/24999 [3:38:28<11:34:34,  2.19s/it]Killed
+slurmstepd: error: Detected 1 oom_kill event in StepId=1144301.batch. Some of the step tasks have been OOM Killed.

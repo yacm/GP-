@@ -5,29 +5,36 @@ import numpy as np
 import scipy.integrate as integrate
 from torch.special import gammaln
 import torch.nn.functional as F
+from torchquad import Simpson
+
 from HMC import *
 
 # I have modified the class to include the possibility of a prior in the second level of inference
 class GaussianProcess():
-    def __init__(self,x_grid,V,Y,Gamma,name,device,flag="noiseless",Pd= lambda x : 2.*(1.-x) ,Ker = lambda x: tr.outer(x,x),**args):
+    def __init__(self,x_grid,V,Y,Gamma,name,device,ITD,nugget="no",Pd= lambda x : 2.*(1.-x) ,Ker = lambda x: tr.outer(x,x),**args):
+        if device=="cpu":
+            tr.set_default_dtype(tr.float64)
+        else:
+            tr.set_default_dtype(tr.float32)
         
         
         self.name=name
         self.device= device
-        self.flag=flag#define if you consider noisy of noiseless data
-        self.x_grid = tr.tensor(x_grid).to(tr.float32).to(self.device)
+        self.ITD=ITD
+        self.flag=nugget#define if you consider noisy of noiseless data
+        self.x_grid = tr.tensor(x_grid).to(self.device)
         self.N = x_grid.shape[0]
-        self.V = tr.tensor(V).to(tr.float32).to(self.device)
-        self.Y = tr.tensor(Y).to(tr.float32).to(self.device)
+        self.V = tr.tensor(V).to(self.device)
+        self.Y = tr.tensor(Y).to(self.device)
         #print("flag")
-        self.Gamma = tr.tensor(Gamma).to(tr.float32).to(self.device) # data covariance
+        self.Gamma = tr.tensor(Gamma).to(self.device) # data covariance
         self.Pd = Pd # the default model function. It must work in torch for training?
         self.Ker = Ker 
         self.pd_args = tuple([tr.tensor([a]) for a in args["Pd_args"]])
         self.ker_args = tuple([tr.tensor([a]) for a in args["Ker_args"]])
-        
+        self.trainingcount=0
         ### extract the error as a hyperparameter
-        if self.flag=="noisy":
+        if self.flag=="yes":
             self.sig = self.ker_args[-1] 
             self.ker_args = self.ker_args[:-1]
         else:
@@ -37,15 +44,22 @@ class GaussianProcess():
 
         self.Npd_args = len(self.pd_args)
         self.Nker_args = len(self.ker_args)
+
+        if self.ITD=="Re":
+            m=tr.ones(self.Gamma.shape[0]-2,self.Gamma.shape[1]-2)
+            self.mask=F.pad(m,(2,0,2,0),value=0).to(self.device)
+        else:
+            m=tr.ones(self.Gamma.shape[0]-1,self.Gamma.shape[1]-1)
+            self.mask=F.pad(m,(1,0,1,0),value=0).to(self.device)
         
     def ComputePosterior(self): # computes the covariance matrix of the posterior
         K = self.Ker(self.x_grid,*self.ker_args)
         Pd = self.Pd(self.x_grid,*self.pd_args)
         
-        if self.flag=="noisy":
-            m=tr.ones(self.Gamma.shape[0]-2,self.Gamma.shape[1]-2)
-            mask=F.pad(m,(2,0,2,0),value=0)
-            Chat = self.Gamma*(1-mask) + (self.sig**2+1e-7)*mask*self.Gamma +self.V@K@self.V.T
+        if self.flag=="yes":
+            #m=tr.ones(self.Gamma.shape[0]-2,self.Gamma.shape[1]-2)
+            #mask=F.pad(m,(2,0,2,0),value=0)
+            Chat = self.Gamma*(1-self.mask) + (self.sig**2)*self.mask*self.Gamma +self.V@K@self.V.T
             #Chat = self.sig**2*mask*self.Gamma +(1-mask)*self.Gamma + self.V@K@self.V.T
             #Chat= self.Gamma + (self.sig**2)*(tr.eye(self.Gamma.shape[0]))*mask + self.V@K@self.V.T
             #Chat = self.Gamma + (self.sig**2)*(tr.eye(self.Gamma.shape[0])) + self.V@K@self.V.T
@@ -61,22 +75,26 @@ class GaussianProcess():
     def Uncertaintyanalysis(self,trace):
         qofx=tr.zeros_like(self.x_grid)
         Z=tr.tensor([0.0])
-        nn = np.linspace(0,20,128)
+        nn = np.linspace(0,26,128)
         iB = np.zeros((nn.shape[0],self.x_grid.shape[0]))
         fe=FE2_Integrator(self.x_grid)
-        for k in range(nn.shape[0]):
-            iB[k,:] = fe.set_up_integration(Kernel= lambda x : np.cos(nn[k]*x))
-        nn=tr.tensor(nn,dtype=tr.float32).to(self.device)
+        if self.ITD=="Re":
+            for k in range(nn.shape[0]):
+                iB[k,:] = fe.set_up_integration(Kernel= lambda x : np.cos(nn[k]*x))
+        else:
+            for k in range(nn.shape[0]):
+                iB[k,:] = fe.set_up_integration(Kernel= lambda x : np.sin(nn[k]*x))
+        nn=tr.tensor(nn).to(self.device)
         Qofnu=tr.zeros_like(nn)
-        iB=tr.tensor(iB,dtype=tr.float32).to(self.device)
+        iB=tr.tensor(iB).to(self.device)
         Pms=[]
         Qnu=[]
         #<q> and <Q> calculation
         for i in range(trace.shape[0]):
             pd_args = tuple(trace[i,0:self.Npd_args])
             k_args = tuple(trace[i,self.Npd_args:])
-            E=self.nlpEvidence(pd_args,k_args)
-            if self.flag=="noisy":
+            E=self.nlpEvidence(pd_args,k_args)#/2.0
+            if self.flag=="yes":
                 sig = k_args[-1]
                 #sig=10**sig
                 k_args = k_args[:-1]
@@ -84,10 +102,8 @@ class GaussianProcess():
                 sig = 1.0
             K = self.Ker(self.x_grid,*k_args)
             Pd = self.Pd(self.x_grid,*pd_args)
-            if self.flag=="noisy":
-                m=tr.ones(self.Gamma.shape[0]-2,self.Gamma.shape[1]-2)
-                mask=F.pad(m,(2,0,2,0),value=0)
-                Chat = self.Gamma*(1-mask) + (sig**2+1e-7)*mask*self.Gamma +self.V@K@self.V.T
+            if self.flag=="yes":
+                Chat = self.Gamma*(1-self.mask) + (sig**2)*self.mask*self.Gamma +self.V@K@self.V.T
             else:
                 Chat = self.Gamma + self.V@K@self.V.T
             iChat = tr.linalg.inv(Chat)
@@ -95,6 +111,7 @@ class GaussianProcess():
             #CpMat = K - VK.T@iChat@VK
             Pm = Pd +VK.T@iChat@(self.Y-self.V@Pd)
             Qofnu+= tr.exp(-E)*Pm@iB.T 
+
             Qnu.append(Pm@iB.T)
             Pms.append(Pm)
             qofx+=tr.exp(-E)*Pm
@@ -110,8 +127,8 @@ class GaussianProcess():
         for i in range(trace.shape[0]):
             pd_args = tuple(trace[i,:self.Npd_args])
             k_args = tuple(trace[i,self.Npd_args:])
-            E=self.nlpEvidence(pd_args,k_args)
-            if self.flag=="noisy":
+            E=self.nlpEvidence(pd_args,k_args)#/2.0
+            if self.flag=="yes":
                 sig = k_args[-1]
                 #sig=10**sig
                 k_args = k_args[:-1]
@@ -119,10 +136,8 @@ class GaussianProcess():
                 sig = 1.0
             K = self.Ker(self.x_grid,*k_args)
             Pd = self.Pd(self.x_grid,*pd_args)
-            if self.flag=="noisy":
-                m=tr.ones(self.Gamma.shape[0]-2,self.Gamma.shape[1]-2)
-                mask=F.pad(m,(2,0,2,0),value=0)
-                Chat = self.Gamma*(1-mask) + (sig**2+1e-7)*mask*self.Gamma +self.V@K@self.V.T
+            if self.flag=="yes":
+                Chat = self.Gamma*(1-self.mask) + (sig**2)*self.mask*self.Gamma +self.V@K@self.V.T
             else:
                 Chat = self.Gamma + self.V@K@self.V.T
             iChat = tr.linalg.inv(Chat)
@@ -146,12 +161,103 @@ class GaussianProcess():
 
         return qs,cov/Z,Pms,Qs,covnu/Z,Qnu
 
+    def model_averaging(self,trace):
+        qofx=tr.zeros_like(self.x_grid)
+        #Z=tr.tensor([0.0])
+        nn = np.linspace(0,26,128)
+        iB = np.zeros((nn.shape[0],self.x_grid.shape[0]))
+        fe=FE2_Integrator(self.x_grid)
+        if self.ITD=="Re":
+            for k in range(nn.shape[0]):
+                iB[k,:] = fe.set_up_integration(Kernel= lambda x : np.cos(nn[k]*x))
+        else:
+            for k in range(nn.shape[0]):
+                iB[k,:] = fe.set_up_integration(Kernel= lambda x : np.sin(nn[k]*x))
+        nn=tr.tensor(nn).to(self.device)
+        Qofnu=tr.zeros_like(nn)
+        iB=tr.tensor(iB).to(self.device)
+        Pms=[]
+        Qnu=[]
+        #<q> and <Q> calculation
+        for i in range(trace.shape[0]):
+            pd_args = tuple(trace[i,0:self.Npd_args])
+            k_args = tuple(trace[i,self.Npd_args:])
+            #E=self.nlpEvidence(pd_args,k_args)#/2.0
+            if self.flag=="yes":
+                sig = k_args[-1]
+                #sig=10**sig
+                k_args = k_args[:-1]
+            else:
+                sig = 1.0
+            K = self.Ker(self.x_grid,*k_args)
+            Pd = self.Pd(self.x_grid,*pd_args)
+            if self.flag=="yes":
+                Chat = self.Gamma*(1-self.mask) + (sig**2)*self.mask*self.Gamma +self.V@K@self.V.T
+            else:
+                Chat = self.Gamma + self.V@K@self.V.T
+            iChat = tr.linalg.inv(Chat)
+            VK = self.V@K
+            #CpMat = K - VK.T@iChat@VK
+            Pm = Pd +VK.T@iChat@(self.Y-self.V@Pd)
+
+
+            #THIS ARE THE ACTUAL MEAN? yes
+            qofx+=Pm/trace.shape[0]
+            Qofnu+=Pm@iB.T/trace.shape[0]
+
+            Qnu.append(Pm@iB.T)
+            Pms.append(Pm)
+
+
+        ##### Calculate the covariance matrix
+        cov = tr.zeros((self.x_grid.shape[0],self.x_grid.shape[0]))
+        covnu=tr.zeros((nn.shape[0],nn.shape[0]))
+        #Z=tr.tensor([0.0])
+        for i in range(trace.shape[0]):
+            pd_args = tuple(trace[i,:self.Npd_args])
+            k_args = tuple(trace[i,self.Npd_args:])
+            #E=self.nlpEvidence(pd_args,k_args)#/2.0
+            if self.flag=="yes":
+                sig = k_args[-1]
+                #sig=10**sig
+                k_args = k_args[:-1]
+            else:
+                sig = 1.0
+            K = self.Ker(self.x_grid,*k_args)
+            Pd = self.Pd(self.x_grid,*pd_args)
+            if self.flag=="yes":
+                Chat = self.Gamma*(1-self.mask) + (sig**2)*self.mask*self.Gamma +self.V@K@self.V.T
+            else:
+                Chat = self.Gamma + self.V@K@self.V.T
+            iChat = tr.linalg.inv(Chat)
+            VK = self.V@K
+            CpMat = K - VK.T@iChat@VK
+            Pm = Pd +VK.T@iChat@(self.Y-self.V@Pd)#I dont need to calculate Pm again but ok
+            
+            CnuMat= iB@CpMat@iB.T
+            Qm = Pm@iB.T
+
+            meannu=Qm-Qofnu
+            mean=Pm-qofx
+            
+            qx=mean.view(1,mean.shape[0])
+            #qxx=qx.view(mean.shape[0],1)
+            qxx=mean.view(mean.shape[0],1)
+            Qv=meannu.view(1,meannu.shape[0])
+            Qvv=meannu.view(meannu.shape[0],1)
+
+            cov+=(CpMat+(qx)*(qxx))/trace.shape[0]
+            covnu+=(CnuMat+(Qv)*(Qvv))/trace.shape[0]
+            
+
+        return qofx,cov,Pms,Qofnu,covnu,Qnu
+
     #This also defines the likelihood in the second level of inference
     def nlpEvidence(self,p_x,k_x):
         # p = [a,b,sig,w]
         pd_args = tuple(p_x)
         k_args = tuple(k_x)
-        if self.flag=="noisy":
+        if self.flag=="yes":
             sig = k_args[-1]
             #sig=10**sig
             k_args = k_args[:-1]
@@ -160,13 +266,7 @@ class GaussianProcess():
         K = self.Ker(self.x_grid,*k_args)
         Pd = self.Pd(self.x_grid,*pd_args)
         
-        m=tr.ones(self.Gamma.shape[0]-2,self.Gamma.shape[1]-2)
-        mask=F.pad(m,(2,0,2,0),value=0).to(self.device)
-        Chat = self.Gamma*(1-mask) + (sig**2)*self.Gamma*mask +self.V@K@self.V.T
-        #Chat = self.Gamma*(1-mask) + (sig**2)*(self.Gamma)*mask +self.V@K@self.V.T# +1e-7*tr.eye(self.Gamma.shape[0]).to(self.device)
-        #m=tr.ones(self.Gamma.shape[0]-2,self.Gamma.shape[1]-2)
-        #mask=F.pad(m,(2,0,2,0),value=0).to(self.device)
-        #Chat = self.Gamma+sig**2*(tr.eye(self.Gamma.shape[0]))+ self.V@(K)@self.V.T
+        Chat = self.Gamma*(1-self.mask) + (sig**2)*self.Gamma*self.mask + self.V@K@self.V.T
 
         iChat = tr.linalg.inv(Chat)
         self.Chat = Chat.to(self.device)
@@ -175,13 +275,14 @@ class GaussianProcess():
         D = self.Y - self.V@Pd
         # no need for D.T@iChat@D D.@iChat@D does the job...
         sign,logdet = tr.linalg.slogdet(Chat)
-        nlp = 0.5*(D@iChat@D + sign*logdet) + 0.5*self.Gamma.shape[0]*np.log(2.0*np.pi)
+        nlp = 0.5*(D@iChat@D + sign*logdet) #+ 0.5*self.Gamma.shape[0]*np.log(2.0*np.pi)
         return nlp
     
-    def train(self,Nsteps=100,lr=0.4,mode="kernel",function="evidence"):
+    def train(self,Nsteps=100,lr=0.4,mode="all",function="evidence"):
         #set initial values of the parameters
+        #tr.autograd.set_detect_anomaly(True)
         p_x=tr.tensor(self.pd_args ,requires_grad=True)
-        if self.flag=="noisy":
+        if self.flag=="yes":
             k_x=tr.tensor(self.ker_args+(self.sig,),requires_grad=True)
         else:
             k_x=tr.tensor(self.ker_args,requires_grad=True)
@@ -228,15 +329,14 @@ class GaussianProcess():
             
             loss.backward()
             optim.step()
-            """delta= tr.abs(p_x.detach()-tr.tensor(self.pd_args))
-            if delta.sum()<1e-3:
-                print("Converged")
-                break"""
-        losses.append(loss.detach().item()+self.Gamma.shape[0]/ 2.0*np.log(2.0*np.pi))
+
+        losses.append(loss.detach().item())#+self.Gamma.shape[0]/ 2.0*np.log(2.0*np.pi))
         self.pd_args=tuple(p_x.detach())
         self.ker_args=tuple(k_x.detach())
+
+        self.trainingcount=self.trainingcount+Nsteps
         #extract the error
-        if self.flag=="noisy":
+        if self.flag=="yes":
 
             self.sig = self.ker_args[-1] 
             self.ker_args = self.ker_args[:-1]
@@ -254,10 +354,19 @@ class GaussianProcess():
 
 
         self.prior_dist = []
-        if self.flag=="noisy":
-            self.Nparams = self.Npd_args+self.Nker_args+1
-        else:
+
+        if self.mode=="kernel":
+            self.Nparams = self.Nker_args 
+        elif self.mode=="mean":
+            self.Nparams = self.Npd_args
+        elif self.mode=="all":
             self.Nparams = self.Npd_args+self.Nker_args
+
+        if self.flag=="yes":
+            self.Nparams = self.Nparams+1
+        else:
+            self.Nparams = self.Nparams
+
         for i in range(self.Nparams):
             if prior_mode[i]==0:
                 self.prior_dist.append(multiNormal(mean[i].unsqueeze(0), cov[i,i].unsqueeze(0),self.device))
@@ -268,9 +377,9 @@ class GaussianProcess():
                 else:
                     self.prior_dist.append(lognormal(mean[i],cov[i,i],self.device,0.0))
             else:
-                self.prior_dist.append(expbeta(-0.99,-0.99,mean[i],cov[i,i], self.device))
+                self.prior_dist.append(expbeta(-0.9,-0.9,mean[i],cov[i,i], self.device))
 
-    def hyperparametersvalues(self,burn=100,set="sampling"):
+    def hyperparametersvalues(self,burn=100,set="original"):
         #Mean and standard deviation of the hyperparameters
         if set=="sampling":
             self.pd_args= tuple(tr.mean(self.trace[burn:,:2],dim=0).detach())
@@ -280,14 +389,20 @@ class GaussianProcess():
         elif set=="original":
             self.pd_args= self.input_pd_args
             self.ker_args= self.input_ker_args
+            self.trainingcount=0
 
     def post2levelpdf(self,X):
 
+        if tr.isnan(X).any():
+            print("NaN detected in the input")
+            print(X)
+        #FIXED PARAMETERS IN CASE OF MODES
         p_x=tr.tensor(self.pd_args).clone().detach()
-        if self.flag=="noisy":
+        if self.flag=="yes":
             k_x=tr.tensor(self.ker_args+(self.sig,)).clone().detach()
         else:
             k_x=tr.tensor(self.ker_args).clone().detach()
+        
         #k_x=tr.tensor(self.ker_args).clone().detach()
         prior=tr.tensor([1.0]).to(self.device)
 
@@ -317,7 +432,10 @@ class GaussianProcess():
 #            prior=tr.torch.tensor([1.0])
             for i in range(self.Nparams):
                 prior*= self.prior_dist[i].pdf(X[i])
-
+        if prior.isnan():
+            print("NaN detected in the prior")
+            print(X)
+            
         return likelihood*prior
     
     def nlogpost2levelpdf(self,X):
@@ -434,18 +552,6 @@ def KrbfMat(x,s,w):
     yy=x.view(x.shape[0],1)
     return s*s*tr.exp(-0.5*((xx - yy)/w)**2)
 
-
-"""class splitRBFker():
-    def __init__(self,sp,scale=1):
-        self.sp =sp
-        self.scale = scale
-    def KerMat(self,x,s1,w1,s2,w2):
-        K2 = KrbfMat(x,s2,w2) # linear
-        K1 = KrbfMat(tr.log(x),s1,w1)
-        sig = tr.diag(tr.special.expit(self.scale*(x-self.sp)))
-        sigC = tr.eye(x.shape[0])-sig
-        ##return K1+K2
-        return sigC@K2@sigC + sig@K1@sig"""
 
 def Sig(x,scale,sp=0.1):
     ss=scale**2
@@ -730,14 +836,67 @@ class multiNormal:
         if x.shape==tr.Size([]):
             x=x.unsqueeze(0)
         return -tr.linalg.inv(self.sigma)@(x-self.mu)*self.pdf(x)
-    
+
+
 class expbeta():
     def __init__(self,a,b,shift,scale,device):
         self.device=device
         self.a=tr.tensor(a).to(device)
         self.b=tr.tensor(b).to(device)
-        self.shift=tr.tensor(shift).to(device)
-        self.scale=tr.tensor(scale).to(device)
+        self.shift= shift.to(device)#tr.tensor(shift).to(device)
+        self.scale= scale.to(device)#tr.tensor(scale).to(device)
+        #self.norm = tr.tensor([0.0]).to(device)
+        self.normpdf()
+    
+    ####LOGPDF (beta and dbeta is not shifted or scaled)
+
+    def betadist(self,x):
+        return (x)**(self.a)*(1-x)**(self.b)*tr.exp(gammaln(self.a+self.b+2) - gammaln(self.a+1) - gammaln(self.b+1))
+    def dbetadist(self,x):
+        return self.betadist(x)*((self.a)/(x) - (self.b)/(1-x))
+    
+    def Unpdf(self,x):
+        y=tr.exp(-self.betadist((x-self.shift)/self.scale)).to(self.device)
+        #y=tr.where(x>=self.shift or x<=self.shift + self.scale , tr.tensor([0.0], device=self.device), tr.exp(-self.betadist((x-self.shift)/self.scale)).to(self.device))
+        y = tr.where(x < self.shift, tr.tensor([0.0], device=self.device), y)
+        y = tr.where(x > self.shift + self.scale, tr.tensor([0.0], device=self.device), y)
+        #y[x<self.shift]= tr.tensor(0.0).to(self.device)
+        #y[x>self.shift+self.scale]= tr.tensor(0.0).to(self.device)
+        return y
+
+    def normpdf(self):
+        #integrate the pdf in the interval
+        integration_domain = [[self.shift, self.shift+self.scale]]
+        vegas = Simpson()
+        result = vegas.integrate(self.Unpdf, dim=1, N=9999, integration_domain=integration_domain)
+        self.norm=result.unsqueeze(0).requires_grad_(True)
+    
+    def pdf(self,x):
+        #
+        # y=self.Unpdf(x)
+        #y[tr.isnan(y)]=tr.tensor(0.0,requires_grad=True).to(self.device)
+        #y=tr.where(tr.isnan(y), tr.tensor(0.0), y)
+        return self.Unpdf(x)/self.norm
+
+    def dpdf(self,x):
+        if x<self.shift or x>self.shift+self.scale:
+            return tr.tensor([0.0]).to(self.device)#.requires_grad_()
+        return -self.dbetadist((x-self.shift)/self.scale)*self.pdf(x)/self.scale**2
+    def nlogpdf(self,x):
+        return -tr.log(self.pdf(x))
+    def gradnlogpdf(self,x):
+        if self.dpdf(x).item()==0:
+            return tr.tensor([0.0]).to(self.device)
+        else:
+            return -self.dpdf(x)/self.pdf(x)
+
+class expbeta1():
+    def __init__(self,a,b,shift,scale,device):
+        self.device=device
+        self.a=tr.tensor(a).to(device)
+        self.b=tr.tensor(b).to(device)
+        self.shift=shift#tr.tensor(shift).to(device)
+        self.scale=scale#tr.tensor(scale).to(device)
     ####LOGPDF (beta and dbeta is not shifted or scaled)
     def betadist(self,x):
         return (x)**(self.a)*(1-x)**(self.b)*tr.exp(gammaln(self.a+self.b+2) - gammaln(self.a+1) - gammaln(self.b+1))
@@ -762,7 +921,7 @@ class expbeta():
     
 
     def sample(self,N):
-        sampler=HMC_sampler(self.nlogpdf,device,tr.tensor([0.4]),grad=self.gradnlogpdf)
+        sampler=HMC_sampler(self.nlogpdf,self.device,tr.tensor([0.4]),grad=self.gradnlogpdf)
         sampler.q0= (self.shift + 0.5*self.scale).unsqueeze(0).requires_grad_()
         qs,ps,H= sampler.sample(sampler.q0,N,1/20,20)
         return qs

@@ -1,0 +1,62 @@
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torch/functional.py:513: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /opt/conda/conda-bld/pytorch_1724789563135/work/aten/src/ATen/native/TensorShape.cpp:3609.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torchquad/integration/utils.py:248: UserWarning: DEPRECATION WARNING: In future versions of torchquad, an array-like object will be returned.
+  warnings.warn(
+Namespace(i=14, Nsamples=25000, burn=0, L=100, eps=0.001, ITD='Re', mean='PDF', ker='rbf_logrbf', mode='all', IDslurm='44')
+Current date and time : 2025-02-03 14:53:06
+GP specifications 
+ Sampling or training: all
+ model: PDF
+ kernel: rbf_logrbf nugget: no
+ Ioffe time Distribution: Re(M) 
+ mean = tensor([-1.,  0.,  0.,  0.,  0.,  0.,  0.,  0.]) 
+ sigma = tensor([ 2., 15., 15., 20., 10., 20., 10.,  2.]) 
+ prior dist = tensor([2, 2, 2, 2, 2, 2, 2, 2, 2]) 
+ model init = (0.0, 1.0, 2.0) 
+ kernel init = (2.5, 0.1, 2.5, 0.1, 1.0) 
+ momentum init = tensor([1., 1., 1., 1., 1., 1., 1., 1.]) 
+ device = cpu 
+ mode = all 
+ SLURM_ID = 44
+#################Define the model###########################
+0=gaussian, 1=lognormal, 2=expbeta
+z=1a done
+z=2a done
+z=3a done
+z=4a done
+z=5a done
+z=6a done
+z=7a done
+z=8a done
+z=9a done
+z=10a done
+z=11a done
+z=12a done
+z=NNPDF(4) done
+z=NNPDF(10) done
+z=NNPDF(25) done
+Training everything z=NNPDF(25)
+NaN detected in the input
+tensor([nan, nan, nan, nan, nan, nan, nan, nan], grad_fn=<CatBackward0>)
+NaN detected in the prior
+tensor([nan, nan, nan, nan, nan, nan, nan, nan], grad_fn=<CatBackward0>)
+NaN detected
+tensor([nan, nan, nan, nan, nan, nan, nan, nan, 1.])
+(tensor([2.5000]), tensor([0.1000]), tensor([2.5000]), tensor([0.1000]), tensor([1.]))
+z=1a sampler done
+z=2a sampler done
+z=3a sampler done
+z=4a sampler done
+z=5a sampler done
+z=6a sampler done
+z=7a sampler done
+z=8a sampler done
+z=9a sampler done
+z=10a sampler done
+z=11a sampler done
+z=12a sampler done
+z=NNPDF(4) sampler done
+z=NNPDF(10) sampler done
+z=NNPDF(25) sampler done
+  0%|          | 0/24999 [00:00<?, ?it/s]  1%|          | 250/24999 [05:34<9:11:44,  1.34s/it]  2%|▏         | 500/24999 [10:59<8:57:33,  1.32s/it]  3%|▎         | 750/24999 [14:05<7:05:48,  1.05s/it]  4%|▍         | 1000/24999 [17:50<6:37:23,  1.01it/s]  5%|▌         | 1250/24999 [20:10<5:31:16,  1.19it/s]  6%|▌         | 1500/24999 [25:23<6:23:24,  1.02it/s]  7%|▋         | 1750/24999 [32:19<7:45:59,  1.20s/it]  8%|▊         | 2000/24999 [38:46<8:23:12,  1.31s/it]  9%|▉         | 2250/24999 [43:50<8:06:07,  1.28s/it] 10%|█         | 2500/24999 [50:19<8:32:33,  1.37s/it] 11%|█         | 2750/24999 [55:49<8:21:17,  1.35s/it] 12%|█▏        | 3000/24999 [1:01:57<8:29:14,  1.39s/it] 13%|█▎        | 3250/24999 [1:06:27<7:49:40,  1.30s/it] 14%|█▍        | 3500/24999 [1:11:04<7:23:54,  1.24s/it] 15%|█▌        | 3750/24999 [1:14:52<6:43:53,  1.14s/it] 16%|█▌        | 4000/24999 [1:20:31<7:01:48,  1.21s/it] 17%|█▋        | 4250/24999 [1:26:04<7:09:57,  1.24s/it] 18%|█▊        | 4500/24999 [1:31:13<7:03:49,  1.24s/it] 19%|█▉        | 4750/24999 [1:37:28<7:25:01,  1.32s/it] 20%|██        | 5000/24999 [1:43:17<7:27:16,  1.34s/it] 21%|██        | 5250/24999 [1:48:50<7:20:44,  1.34s/it] 22%|██▏       | 5500/24999 [1:54:37<7:20:06,  1.35s/it] 23%|██▎       | 5750/24999 [1:59:43<7:01:48,  1.31s/it] 24%|██▍       | 6000/24999 [2:03:51<6:25:46,  1.22s/it] 25%|██▌       | 6250/24999 [2:09:49<6:40:38,  1.28s/it] 26%|██▌       | 6500/24999 [2:15:24<6:40:38,  1.30s/it] 27%|██▋       | 6750/24999 [2:22:01<7:01:27,  1.39s/it] 28%|██▊       | 7000/24999 [2:27:41<6:53:23,  1.38s/it] 29%|██▉       | 7250/24999 [2:31:57<6:16:26,  1.27s/it] 30%|███       | 7500/24999 [2:35:56<5:43:25,  1.18s/it] 31%|███       | 7750/24999 [2:39:14<5:05:13,  1.06s/it] 32%|███▏      | 8000/24999 [2:41:26<4:15:17,  1.11it/s] 33%|███▎      | 8250/24999 [2:44:30<3:57:47,  1.17it/s] 34%|███▍      | 8500/24999 [2:50:11<4:36:22,  1.01s/it] 35%|███▌      | 8750/24999 [2:55:03<4:45:35,  1.05s/it] 36%|███▌      | 9000/24999 [3:00:30<5:01:16,  1.13s/it] 37%|███▋      | 9250/24999 [3:06:00<5:11:32,  1.19s/it] 38%|███▊      | 9500/24999 [3:11:01<5:08:10,  1.19s/it] 39%|███▉      | 9750/24999 [3:14:45<4:40:27,  1.10s/it] 40%|████      | 10000/24999 [3:17:56<4:10:20,  1.00s/it] 41%|████      | 10250/24999 [3:23:10<4:24:55,  1.08s/it] 42%|████▏     | 10500/24999 [3:28:21<4:32:27,  1.13s/it] 43%|████▎     | 10750/24999 [3:33:01<4:27:25,  1.13s/it] 44%|████▍     | 11000/24999 [3:38:17<4:32:09,  1.17s/it] 45%|████▌     | 11250/24999 [3:43:06<4:26:32,  1.16s/it] 46%|████▌     | 11500/24999 [3:48:12<4:26:01,  1.18s/it] 47%|████▋     | 11750/24999 [3:52:39<4:13:20,  1.15s/it] 48%|████▊     | 12000/24999 [3:56:57<4:01:14,  1.11s/it] 49%|████▉     | 12250/24999 [4:01:09<3:49:45,  1.08s/it] 50%|█████     | 12500/24999 [4:06:00<3:50:29,  1.11s/it] 51%|█████     | 12750/24999 [4:10:47<3:48:29,  1.12s/it] 52%|█████▏    | 13000/24999 [4:15:14<3:40:42,  1.10s/it] 53%|█████▎    | 13250/24999 [4:19:24<3:30:03,  1.07s/it] 54%|█████▍    | 13500/24999 [4:25:19<3:45:22,  1.18s/it] 55%|█████▌    | 13750/24999 [4:29:57<3:36:58,  1.16s/it] 56%|█████▌    | 14000/24999 [4:35:02<3:35:28,  1.18s/it] 57%|█████▋    | 14250/24999 [4:37:58<3:05:24,  1.03s/it] 58%|█████▊    | 14500/24999 [4:42:23<3:02:25,  1.04s/it] 59%|█████▉    | 14750/24999 [4:47:16<3:04:38,  1.08s/it] 60%|██████    | 15000/24999 [4:53:22<3:19:17,  1.20s/it] 61%|██████    | 15250/24999 [4:59:28<3:27:24,  1.28s/it] 62%|██████▏   | 15500/24999 [5:04:41<3:20:52,  1.27s/it] 63%|██████▎   | 15750/24999 [5:09:41<3:12:21,  1.25s/it] 64%|██████▍   | 16000/24999 [5:15:21<3:12:11,  1.28s/it] 65%|██████▌   | 16250/24999 [5:20:30<3:04:53,  1.27s/it] 66%|██████▌   | 16500/24999 [5:24:46<2:49:18,  1.20s/it] 67%|██████▋   | 16750/24999 [5:28:21<2:30:26,  1.09s/it] 68%|██████▊   | 17000/24999 [5:32:27<2:21:33,  1.06s/it] 69%|██████▉   | 17250/24999 [5:36:50<2:16:44,  1.06s/it] 70%|███████   | 17500/24999 [5:42:15<2:21:22,  1.13s/it] 71%|███████   | 17750/24999 [5:47:43<2:23:11,  1.19s/it] 72%|███████▏  | 18000/24999 [5:52:55<2:20:30,  1.20s/it]Killed
+slurmstepd: error: Detected 1 oom_kill event in StepId=1327394.batch. Some of the step tasks have been OOM Killed.

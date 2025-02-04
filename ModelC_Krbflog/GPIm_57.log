@@ -1,0 +1,57 @@
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torch/functional.py:513: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /opt/conda/conda-bld/pytorch_1724789563135/work/aten/src/ATen/native/TensorShape.cpp:3609.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torchquad/integration/utils.py:248: UserWarning: DEPRECATION WARNING: In future versions of torchquad, an array-like object will be returned.
+  warnings.warn(
+Namespace(i=12, Nsamples=25000, burn=0, L=100, eps=0.001, ITD='Im', mean='ModelC', ker='Krbflog', mode='all', IDslurm='57')
+Current date and time : 2025-01-25 22:17:16
+GP specifications 
+ Sampling or training: all
+ model: ModelC
+ kernel: Krbflog nugget: no
+ Ioffe time Distribution: Im(M) 
+ mean = tensor([0.1000, 0.0000, 0.0000]) 
+ sigma = tensor([20., 10., 10.]) 
+ prior dist = tensor([2, 2, 2]) 
+ model init = (1.0,) 
+ kernel init = (4.0, 1.0) 
+ momentum init = tensor([1., 1., 1.]) 
+ device = cpu 
+ mode = all 
+ SLURM_ID = 57
+#################Define the model###########################
+0=gaussian, 1=lognormal, 2=expbeta
+z=1a done
+z=2a done
+z=3a done
+z=4a done
+z=5a done
+z=6a done
+z=7a done
+z=8a done
+z=9a done
+z=10a done
+z=11a done
+z=12a done
+z=NNPDF(4) done
+z=NNPDF(10) done
+z=NNPDF(25) done
+Training everything z=NNPDF(4)
+tensor([0.9223, 0.7656, 0.9459, 1.0000])
+(tensor(0.7656), tensor(0.9459))
+z=1a sampler done
+z=2a sampler done
+z=3a sampler done
+z=4a sampler done
+z=5a sampler done
+z=6a sampler done
+z=7a sampler done
+z=8a sampler done
+z=9a sampler done
+z=10a sampler done
+z=11a sampler done
+z=12a sampler done
+z=NNPDF(4) sampler done
+z=NNPDF(10) sampler done
+z=NNPDF(25) sampler done
+  0%|          | 0/24999 [00:00<?, ?it/s]  1%|          | 250/24999 [03:00<4:57:44,  1.39it/s]  2%|▏         | 500/24999 [06:00<4:54:27,  1.39it/s]  3%|▎         | 750/24999 [09:00<4:51:20,  1.39it/s]  4%|▍         | 1000/24999 [12:00<4:48:03,  1.39it/s]  5%|▌         | 1250/24999 [15:00<4:44:46,  1.39it/s]  6%|▌         | 1500/24999 [18:00<4:42:06,  1.39it/s]  7%|▋         | 1750/24999 [21:01<4:39:21,  1.39it/s]  8%|▊         | 2000/24999 [24:02<4:37:05,  1.38it/s]  9%|▉         | 2250/24999 [27:03<4:34:04,  1.38it/s] 10%|█         | 2500/24999 [30:11<4:34:16,  1.37it/s] 11%|█         | 2750/24999 [33:18<4:33:17,  1.36it/s] 12%|█▏        | 3000/24999 [36:21<4:29:44,  1.36it/s] 13%|█▎        | 3250/24999 [39:23<4:25:49,  1.36it/s] 14%|█▍        | 3500/24999 [42:25<4:21:59,  1.37it/s] 15%|█▌        | 3750/24999 [45:26<4:18:21,  1.37it/s] 16%|█▌        | 4000/24999 [48:28<4:15:00,  1.37it/s] 17%|█▋        | 4250/24999 [51:30<4:12:01,  1.37it/s] 18%|█▊        | 4500/24999 [54:32<4:08:51,  1.37it/s] 19%|█▉        | 4750/24999 [57:33<4:05:29,  1.37it/s] 20%|██        | 5000/24999 [1:00:35<4:02:19,  1.38it/s] 21%|██        | 5250/24999 [1:03:35<3:58:35,  1.38it/s] 22%|██▏       | 5500/24999 [1:06:36<3:55:40,  1.38it/s] 23%|██▎       | 5750/24999 [1:09:37<3:52:30,  1.38it/s] 24%|██▍       | 6000/24999 [1:12:42<3:50:52,  1.37it/s] 25%|██▌       | 6250/24999 [1:15:44<3:47:42,  1.37it/s] 26%|██▌       | 6500/24999 [1:18:46<3:44:44,  1.37it/s] 27%|██▋       | 6750/24999 [1:21:48<3:41:20,  1.37it/s] 28%|██▊       | 7000/24999 [1:24:50<3:38:32,  1.37it/s] 29%|██▉       | 7250/24999 [1:27:50<3:34:50,  1.38it/s] 30%|███       | 7500/24999 [1:30:47<3:29:52,  1.39it/s] 31%|███       | 7750/24999 [1:33:49<3:27:42,  1.38it/s] 32%|███▏      | 8000/24999 [1:36:50<3:24:45,  1.38it/s] 33%|███▎      | 8250/24999 [1:39:46<3:20:27,  1.39it/s] 34%|███▍      | 8500/24999 [1:42:41<3:15:47,  1.40it/s] 35%|███▌      | 8750/24999 [1:45:37<3:12:17,  1.41it/s] 36%|███▌      | 9000/24999 [1:48:37<3:09:56,  1.40it/s] 37%|███▋      | 9250/24999 [1:51:39<3:08:21,  1.39it/s] 38%|███▊      | 9500/24999 [1:54:41<3:06:07,  1.39it/s]Killed
+slurmstepd: error: Detected 1 oom_kill event in StepId=1143784.batch. Some of the step tasks have been OOM Killed.

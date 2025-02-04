@@ -1,0 +1,57 @@
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torch/functional.py:513: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /opt/conda/conda-bld/pytorch_1724789563135/work/aten/src/ATen/native/TensorShape.cpp:3609.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torchquad/integration/utils.py:248: UserWarning: DEPRECATION WARNING: In future versions of torchquad, an array-like object will be returned.
+  warnings.warn(
+Namespace(i=7, Nsamples=16666, burn=0, L=100, eps=0.001, ITD='Im', mean='ModelC', ker='rbf_logrbf', mode='all', IDslurm='82')
+Current date and time : 2025-01-26 14:08:29
+GP specifications 
+ Sampling or training: all
+ model: ModelC
+ kernel: rbf_logrbf nugget: no
+ Ioffe time Distribution: Im(M) 
+ mean = tensor([0.1000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000]) 
+ sigma = tensor([20., 20., 10., 20., 10.,  2.]) 
+ prior dist = tensor([2, 2, 2, 2, 2, 2, 2]) 
+ model init = (1.0,) 
+ kernel init = (1.5, 0.1, 1.5, 1.0, 1.0) 
+ momentum init = tensor([1., 1., 1., 1., 1., 1.]) 
+ device = cpu 
+ mode = all 
+ SLURM_ID = 82
+#################Define the model###########################
+0=gaussian, 1=lognormal, 2=expbeta
+z=1a done
+z=2a done
+z=3a done
+z=4a done
+z=5a done
+z=6a done
+z=7a done
+z=8a done
+z=9a done
+z=10a done
+z=11a done
+z=12a done
+z=NNPDF(4) done
+z=NNPDF(10) done
+z=NNPDF(25) done
+Training everything z=8a
+tensor([1.3767, 0.8421, 1.6050, 3.9051, 1.4179, 0.8783, 1.0000])
+(tensor(0.8421), tensor(1.6050), tensor(3.9051), tensor(1.4179), tensor(0.8783))
+z=1a sampler done
+z=2a sampler done
+z=3a sampler done
+z=4a sampler done
+z=5a sampler done
+z=6a sampler done
+z=7a sampler done
+z=8a sampler done
+z=9a sampler done
+z=10a sampler done
+z=11a sampler done
+z=12a sampler done
+z=NNPDF(4) sampler done
+z=NNPDF(10) sampler done
+z=NNPDF(25) sampler done
+  0%|          | 0/16665 [00:00<?, ?it/s]  1%|          | 166/16665 [04:05<6:46:15,  1.48s/it]  2%|▏         | 332/16665 [08:07<6:39:04,  1.47s/it]  3%|▎         | 498/16665 [12:07<6:32:34,  1.46s/it]  4%|▍         | 664/16665 [16:03<6:25:10,  1.44s/it]  5%|▍         | 830/16665 [19:55<6:16:22,  1.43s/it]  6%|▌         | 996/16665 [23:48<6:10:42,  1.42s/it]  7%|▋         | 1162/16665 [27:43<6:06:12,  1.42s/it]  8%|▊         | 1328/16665 [31:34<6:00:19,  1.41s/it]  9%|▉         | 1494/16665 [35:27<5:56:00,  1.41s/it] 10%|▉         | 1660/16665 [39:22<5:52:44,  1.41s/it] 11%|█         | 1826/16665 [43:17<5:49:12,  1.41s/it] 12%|█▏        | 1992/16665 [47:15<5:46:46,  1.42s/it] 13%|█▎        | 2158/16665 [51:12<5:43:44,  1.42s/it] 14%|█▍        | 2324/16665 [55:09<5:40:12,  1.42s/it] 15%|█▍        | 2490/16665 [59:02<5:34:54,  1.42s/it] 16%|█▌        | 2656/16665 [1:02:57<5:30:31,  1.42s/it] 17%|█▋        | 2822/16665 [1:06:50<5:26:02,  1.41s/it] 18%|█▊        | 2988/16665 [1:10:44<5:21:37,  1.41s/it] 19%|█▉        | 3154/16665 [1:14:38<5:17:39,  1.41s/it] 20%|█▉        | 3320/16665 [1:18:35<5:15:08,  1.42s/it] 21%|██        | 3486/16665 [1:22:29<5:10:38,  1.41s/it] 22%|██▏       | 3652/16665 [1:26:21<5:05:49,  1.41s/it] 23%|██▎       | 3818/16665 [1:30:13<5:00:53,  1.41s/it] 24%|██▍       | 3984/16665 [1:34:05<4:56:24,  1.40s/it] 25%|██▍       | 4150/16665 [1:37:59<4:52:57,  1.40s/it] 26%|██▌       | 4316/16665 [1:41:52<4:49:20,  1.41s/it] 27%|██▋       | 4482/16665 [1:45:47<4:45:52,  1.41s/it] 28%|██▊       | 4648/16665 [1:49:42<4:42:18,  1.41s/it] 29%|██▉       | 4814/16665 [1:53:39<4:39:36,  1.42s/it] 30%|██▉       | 4980/16665 [1:57:39<4:37:24,  1.42s/it] 31%|███       | 5146/16665 [2:01:37<4:33:56,  1.43s/it] 32%|███▏      | 5312/16665 [2:05:35<4:30:41,  1.43s/it] 33%|███▎      | 5478/16665 [2:09:34<4:27:06,  1.43s/it] 34%|███▍      | 5644/16665 [2:13:33<4:23:34,  1.43s/it] 35%|███▍      | 5810/16665 [2:17:31<4:19:33,  1.43s/it] 36%|███▌      | 5976/16665 [2:21:30<4:15:47,  1.44s/it] 37%|███▋      | 6142/16665 [2:25:31<4:12:29,  1.44s/it] 38%|███▊      | 6308/16665 [2:29:32<4:09:08,  1.44s/it] 39%|███▉      | 6474/16665 [2:33:33<4:05:40,  1.45s/it] 40%|███▉      | 6640/16665 [2:37:33<4:01:49,  1.45s/it] 41%|████      | 6806/16665 [2:41:33<3:57:29,  1.45s/it] 42%|████▏     | 6972/16665 [2:45:33<3:53:42,  1.45s/it] 43%|████▎     | 7138/16665 [2:49:32<3:49:13,  1.44s/it] 44%|████▍     | 7304/16665 [2:53:28<3:44:24,  1.44s/it] 45%|████▍     | 7470/16665 [2:57:25<3:39:48,  1.43s/it] 46%|████▌     | 7636/16665 [3:01:23<3:35:52,  1.43s/it] 47%|████▋     | 7802/16665 [3:05:21<3:31:43,  1.43s/it] 48%|████▊     | 7968/16665 [3:09:17<3:27:17,  1.43s/it] 49%|████▉     | 8134/16665 [3:13:14<3:23:15,  1.43s/it] 50%|████▉     | 8300/16665 [3:17:10<3:18:58,  1.43s/it]Killed
+slurmstepd: error: Detected 1 oom_kill event in StepId=1145487.batch. Some of the step tasks have been OOM Killed.

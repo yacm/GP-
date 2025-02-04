@@ -1,35 +1,0 @@
-/sciclone/pscr/yacahuanamedra/GP.py:739: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  self.shift=tr.tensor(shift).to(device)
-/sciclone/pscr/yacahuanamedra/GP.py:740: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
-  self.scale=tr.tensor(scale).to(device)
-Namespace(i=9, Nsamples=100000, burn=0, L=150, eps=0.00066)
-0=gaussian, 1=lognormal, 2=expbeta
-z=1a done
-z=2a done
-z=3a done
-z=4a done
-z=5a done
-z=6a done
-z=7a done
-z=8a done
-z=9a done
-z=10a done
-z=11a done
-z=12a done
-z=mock done
-Training everything z=10a
-tensor([0.3364, 3.2821, 1.0000, 0.0611, 3.7902, 0.0599, 5.0187, 0.1955, 1.0000])
-z=1a sampler done
-z=2a sampler done
-z=3a sampler done
-z=4a sampler done
-z=5a sampler done
-z=6a sampler done
-z=7a sampler done
-z=8a sampler done
-z=9a sampler done
-z=10a sampler done
-z=11a sampler done
-z=12a sampler done
-z=mock sampler done
-  0%|          | 0/99999 [00:00<?, ?it/s]  1%|          | 1000/99999 [26:26<43:37:12,  1.59s/it]  2%|▏         | 2000/99999 [53:15<43:32:31,  1.60s/it]  3%|▎         | 3000/99999 [1:19:12<42:35:09,  1.58s/it]slurmstepd: error: *** JOB 308138 ON fm24 CANCELLED AT 2024-11-25T11:43:46 ***

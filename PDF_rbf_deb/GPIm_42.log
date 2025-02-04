@@ -1,0 +1,56 @@
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torch/functional.py:513: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at /opt/conda/conda-bld/pytorch_1724789563135/work/aten/src/ATen/native/TensorShape.cpp:3609.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+/sciclone/home/yacahuanamedra/.conda/envs/gptorch/lib/python3.12/site-packages/torchquad/integration/utils.py:248: UserWarning: DEPRECATION WARNING: In future versions of torchquad, an array-like object will be returned.
+  warnings.warn(
+Namespace(i=12, Nsamples=25000, burn=0, L=100, eps=0.001, ITD='Im', mean='PDF', ker='rbf_deb', mode='all', IDslurm='42')
+Current date and time : 2025-01-26 00:03:49
+GP specifications 
+ Sampling or training: all
+ model: PDF
+ kernel: rbf_deb nugget: no
+ Ioffe time Distribution: Im(M) 
+ mean = tensor([-1.0000,  0.0000,  0.1000,  0.0000,  0.0000,  0.0000,  0.0000,  0.0000]) 
+ sigma = tensor([ 2., 15., 15., 11.,  6., 11., 11.,  2.]) 
+ prior dist = tensor([2, 2, 2, 2, 2, 2, 2, 2, 2]) 
+ model init = (-0.1, 2.0, 3.0) 
+ kernel init = (4.0, 5.0, 4.0, 2.0, 0.1) 
+ momentum init = tensor([1., 1., 1., 1., 1., 1., 1., 1.]) 
+ device = cpu 
+ mode = all 
+ SLURM_ID = 42
+#################Define the model###########################
+0=gaussian, 1=lognormal, 2=expbeta
+z=1a done
+z=2a done
+z=3a done
+z=4a done
+z=5a done
+z=6a done
+z=7a done
+z=8a done
+z=9a done
+z=10a done
+z=11a done
+z=12a done
+z=NNPDF(4) done
+z=NNPDF(10) done
+z=NNPDF(25) done
+Training everything z=NNPDF(4)
+tensor([0.4016, 3.6357, 6.8099, 0.1899, 4.5291, 6.5001, 0.1221, 0.4383, 1.0000])
+(tensor(0.1899), tensor(4.5291), tensor(6.5001), tensor(0.1221), tensor(0.4383))
+z=1a sampler done
+z=2a sampler done
+z=3a sampler done
+z=4a sampler done
+z=5a sampler done
+z=6a sampler done
+z=7a sampler done
+z=8a sampler done
+z=9a sampler done
+z=10a sampler done
+z=11a sampler done
+z=12a sampler done
+z=NNPDF(4) sampler done
+z=NNPDF(10) sampler done
+z=NNPDF(25) sampler done
+  0%|          | 0/24999 [00:00<?, ?it/s]  1%|          | 250/24999 [08:27<13:56:44,  2.03s/it]  2%|▏         | 500/24999 [16:47<13:41:19,  2.01s/it]  3%|▎         | 750/24999 [25:02<13:27:39,  2.00s/it]  4%|▍         | 1000/24999 [33:17<13:16:07,  1.99s/it]  5%|▌         | 1250/24999 [41:10<12:54:00,  1.96s/it]  6%|▌         | 1500/24999 [48:49<12:29:58,  1.91s/it]  7%|▋         | 1750/24999 [56:27<12:11:16,  1.89s/it]  8%|▊         | 2000/24999 [1:04:05<11:56:36,  1.87s/it]  9%|▉         | 2250/24999 [1:11:41<11:43:39,  1.86s/it] 10%|█         | 2500/24999 [1:19:12<11:29:56,  1.84s/it] 11%|█         | 2750/24999 [1:26:42<11:17:39,  1.83s/it] 12%|█▏        | 3000/24999 [1:34:07<11:04:56,  1.81s/it] 13%|█▎        | 3250/24999 [1:41:32<10:53:44,  1.80s/it] 14%|█▍        | 3500/24999 [1:48:57<10:43:38,  1.80s/it] 15%|█▌        | 3750/24999 [1:56:23<10:34:35,  1.79s/it] 16%|█▌        | 4000/24999 [2:03:49<10:26:19,  1.79s/it] 17%|█▋        | 4250/24999 [2:11:15<10:18:26,  1.79s/it] 18%|█▊        | 4500/24999 [2:18:42<10:10:44,  1.79s/it] 19%|█▉        | 4750/24999 [2:26:08<10:03:14,  1.79s/it] 20%|██        | 5000/24999 [2:33:36<9:56:07,  1.79s/it]  21%|██        | 5250/24999 [2:41:04<9:48:54,  1.79s/it] 22%|██▏       | 5500/24999 [2:48:31<9:41:33,  1.79s/it] 23%|██▎       | 5750/24999 [2:55:59<9:34:12,  1.79s/it] 24%|██▍       | 6000/24999 [3:03:18<9:23:40,  1.78s/it] 25%|██▌       | 6250/24999 [3:10:24<9:08:49,  1.76s/it] 26%|██▌       | 6500/24999 [3:17:14<8:50:55,  1.72s/it] 27%|██▋       | 6750/24999 [3:24:05<8:36:28,  1.70s/it]slurmstepd: error: *** JOB 1144501 ON fm15 CANCELLED AT 2025-01-26T16:30:50 ***
